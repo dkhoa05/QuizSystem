@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Quiz Home{% endblock %}
+
+{% block content %}
+<h3 class="mb-3">Welcome to Quiz System 👋</h3>
+
+<div class="mb-3">
+  <a href="{{ url_for('quiz.quiz_list') }}" class="btn btn-primary">📚 Danh sách Quiz</a>
+  <a href="{{ url_for('quiz.history') }}" class="btn btn-outline-secondary">📊 Lịch sử làm bài</a>
+  {% if current_user.role == 'admin' %}
+    <a href="{{ url_for('quiz.manage_quizzes') }}" class="btn btn-warning">🛠 Admin: Quản lý Quiz</a>
+  {% endif %}
+</div>
+
+{% if quizzes %}
+  <h5>Quiz đang mở:</h5>
+  <ul>
+    {% for q in quizzes %}
+      <li>{{ q.title }} ({{ q.mode }})</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Chưa có quiz nào.</p>
+{% endif %}
+{% endblock %}

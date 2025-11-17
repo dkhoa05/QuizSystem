@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Admin - Quản lý Quiz{% endblock %}
+
+{% block content %}
+<h3>Admin: Quản lý Quiz</h3>
+
+<a href="{{ url_for('quiz.create_quiz') }}" class="btn btn-success mb-3">+ Tạo quiz mới</a>
+
+{% if quizzes %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tên Quiz</th>
+        <th>Mode</th>
+        <th>Thời gian</th>
+        <th>Trạng thái</th>
+        <th>Ngày tạo</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for q in quizzes %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ q.title }}</td>
+        <td>{{ q.mode }}</td>
+        <td>{{ q.time_limit or "Không giới hạn" }}</td>
+        <td>
+          {% if q.is_active %}
+            <span class="badge bg-success">Active</span>
+          {% else %}
+            <span class="badge bg-secondary">Inactive</span>
+          {% endif %}
+        </td>
+        <td>{{ q.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+        <td>
+          <a href="{{ url_for('quiz.manage_questions', quiz_id=q.id) }}" class="btn btn-sm btn-primary">
+            Câu hỏi
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>Chưa có quiz nào.</p>
+{% endif %}
+{% endblock %}

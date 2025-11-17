@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Lịch sử bài làm{% endblock %}
+
+{% block content %}
+<h3>Lịch sử bài làm</h3>
+
+{% if submissions %}
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Quiz</th>
+        <th>Điểm</th>
+        <th>Đúng / Tổng</th>
+        <th>Thời gian</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in submissions %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ s.quiz.title }}</td>
+        <td>{{ "%.2f"|format(s.score) }}</td>
+        <td>{{ s.correct_answers }}/{{ s.total_questions }}</td>
+        <td>{{ s.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+        <td>
+          <a href="{{ url_for('quiz.view_result', submission_id=s.id) }}" class="btn btn-sm btn-outline-primary">
+            Xem
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>Chưa có bài làm nào.</p>
+{% endif %}
+{% endblock %}

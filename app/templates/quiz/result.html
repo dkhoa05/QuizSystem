@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Kết quả{% endblock %}
+
+{% block content %}
+<h3>Kết quả bài làm</h3>
+
+<p>
+  Điểm: <strong>{{ "%.2f"|format(submission.score) }}</strong> / 10  
+  ({{ submission.correct_answers }} / {{ submission.total_questions }} câu đúng)
+</p>
+
+<a href="{{ url_for('quiz.quiz_list') }}" class="btn btn-outline-primary btn-sm">Quay lại danh sách quiz</a>
+<a href="{{ url_for('quiz.history') }}" class="btn btn-outline-secondary btn-sm">Xem lịch sử</a>
+{% endblock %}

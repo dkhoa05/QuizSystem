@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Danh sách Quiz{% endblock %}
+
+{% block content %}
+<h3>Danh sách Quiz</h3>
+
+{% if quizzes %}
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tên Quiz</th>
+        <th>Mô tả</th>
+        <th>Thời gian (phút)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for quiz in quizzes %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ quiz.title }}</td>
+        <td>{{ quiz.description or "-" }}</td>
+        <td>{{ quiz.time_limit or "Không giới hạn" }}</td>
+        <td>
+          <a href="{{ url_for('quiz.start_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-success">
+            Bắt đầu
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>Không có quiz nào.</p>
+{% endif %}
+{% endblock %}
