@@ -7,7 +7,7 @@ class RegisterForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(min=3, max=64)])
     email = StringField("Email", validators=[DataRequired(), Email(), Length(max=120)])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=6)])
-    confirm_password = PasswordField(
+    confirm = PasswordField(
         "Confirm Password",
         validators=[DataRequired(), EqualTo("password", message="Mật khẩu không khớp")],
     )

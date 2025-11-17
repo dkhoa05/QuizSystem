@@ -1,25 +1,76 @@
 {% extends "base.html" %}
-{% block title %}Quiz Home{% endblock %}
+
+{% block title %}Trang chủ | Quiz System{% endblock %}
 
 {% block content %}
-<h3 class="mb-3">Welcome to Quiz System 👋</h3>
-
-<div class="mb-3">
-  <a href="{{ url_for('quiz.quiz_list') }}" class="btn btn-primary">📚 Danh sách Quiz</a>
-  <a href="{{ url_for('quiz.history') }}" class="btn btn-outline-secondary">📊 Lịch sử làm bài</a>
-  {% if current_user.role == 'admin' %}
-    <a href="{{ url_for('quiz.manage_quizzes') }}" class="btn btn-warning">🛠 Admin: Quản lý Quiz</a>
-  {% endif %}
+<div class="card-soft p-4 p-md-5 mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-7">
+            <h1 class="page-title mb-2">
+                Xin chào, {{ current_user.username }} 👋
+            </h1>
+            <p class="page-subtitle mb-3">
+                Hệ thống thi trắc nghiệm trực tuyến. Chọn quiz, vào thi,
+                auto chấm, lưu lịch sử, không nói nhiều.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('quiz.quiz_list') }}" class="btn btn-primary-soft">
+                    🚀 Vào danh sách Quiz
+                </a>
+                <a href="{{ url_for('quiz.history') }}" class="btn btn-outline-soft">
+                    📜 Xem lịch sử làm bài
+                </a>
+                {% if current_user.role == "admin" %}
+                <a href="{{ url_for('quiz.manage_quizzes') }}" class="btn btn-outline-soft">
+                    🛠 Khu vực Admin
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-5 mt-4 mt-md-0">
+            <div class="text-center">
+                <div class="score-circle" style="--score: 75;">
+                    <div class="score-inner">
+                        🎯
+                    </div>
+                </div>
+                <p class="page-subtitle mb-1">
+                    Sẵn sàng nâng cấp não chưa?
+                </p>
+                <small class="text-muted">Chọn một quiz để bắt đầu.</small>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% if quizzes %}
-  <h5>Quiz đang mở:</h5>
-  <ul>
-    {% for q in quizzes %}
-      <li>{{ q.title }} ({{ q.mode }})</li>
-    {% endfor %}
-  </ul>
+    <h5 class="mb-3">Quiz đang mở</h5>
+    <div class="row g-3">
+        {% for quiz in quizzes %}
+        <div class="col-md-6">
+            <a href="{{ url_for('quiz.start_quiz', quiz_id=quiz.id) }}" class="text-decoration-none text-white">
+                <div class="quiz-card p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">{{ quiz.title }}</h5>
+                        <span class="badge-mode {% if quiz.mode == 'exam' %}badge-exam{% else %}badge-practice{% endif %}">
+                            {{ "Exam" if quiz.mode == "exam" else "Practice" }}
+                        </span>
+                    </div>
+                    <p class="page-subtitle mb-2">
+                        {{ quiz.description or "Không có mô tả" }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            Thời gian: {{ quiz.time_limit or "Không giới hạn" }} phút
+                        </small>
+                        <span class="text-info small">Bắt đầu ngay →</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
 {% else %}
-  <p>Chưa có quiz nào.</p>
+    <p class="page-subtitle">Hiện chưa có quiz nào được mở.</p>
 {% endif %}
 {% endblock %}

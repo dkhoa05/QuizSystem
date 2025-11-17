@@ -1,49 +1,59 @@
 {% extends "base.html" %}
-{% block title %}Admin - Quản lý Quiz{% endblock %}
+
+{% block title %}Quản lý Quiz | Admin{% endblock %}
 
 {% block content %}
-<h3>Admin: Quản lý Quiz</h3>
-
-<a href="{{ url_for('quiz.create_quiz') }}" class="btn btn-success mb-3">+ Tạo quiz mới</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="page-title mb-1">Quản lý Quiz</h2>
+        <p class="page-subtitle mb-0">Khu vực dành cho Admin.</p>
+    </div>
+    <a href="{{ url_for('quiz.create_quiz') }}" class="btn btn-primary-soft">
+        ➕ Tạo quiz mới
+    </a>
+</div>
 
 {% if quizzes %}
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Tên Quiz</th>
-        <th>Mode</th>
-        <th>Thời gian</th>
-        <th>Trạng thái</th>
-        <th>Ngày tạo</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for q in quizzes %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ q.title }}</td>
-        <td>{{ q.mode }}</td>
-        <td>{{ q.time_limit or "Không giới hạn" }}</td>
-        <td>
-          {% if q.is_active %}
-            <span class="badge bg-success">Active</span>
-          {% else %}
-            <span class="badge bg-secondary">Inactive</span>
-          {% endif %}
-        </td>
-        <td>{{ q.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
-        <td>
-          <a href="{{ url_for('quiz.manage_questions', quiz_id=q.id) }}" class="btn btn-sm btn-primary">
-            Câu hỏi
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="table-responsive">
+    <table class="table table-dark table-dark-soft align-middle">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Tiêu đề</th>
+            <th>Thời gian (phút)</th>
+            <th>Chế độ</th>
+            <th>Trạng thái</th>
+            <th>Ngày tạo</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for quiz in quizzes %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ quiz.title }}</td>
+            <td>{{ quiz.time_limit or "∞" }}</td>
+            <td>{{ quiz.mode }}</td>
+            <td>
+                {% if quiz.is_active %}
+                    <span class="text-success small">Đang mở</span>
+                {% else %}
+                    <span class="text-muted small">Đã ẩn</span>
+                {% endif %}
+            </td>
+            <td>{{ quiz.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+            <td class="text-end">
+                <a href="{{ url_for('quiz.manage_questions', quiz_id=quiz.id) }}"
+                   class="btn btn-outline-soft btn-sm">
+                    Câu hỏi
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% else %}
-  <p>Chưa có quiz nào.</p>
+    <p class="page-subtitle">Chưa có quiz nào.</p>
 {% endif %}
 {% endblock %}

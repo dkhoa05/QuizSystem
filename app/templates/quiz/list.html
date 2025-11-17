@@ -1,37 +1,47 @@
 {% extends "base.html" %}
-{% block title %}Danh sách Quiz{% endblock %}
+
+{% block title %}Danh sách Quiz | Quiz System{% endblock %}
 
 {% block content %}
-<h3>Danh sách Quiz</h3>
+<div class="page-header d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="page-title mb-1">Danh sách Quiz</h2>
+        <p class="page-subtitle mb-0">Chọn một quiz để vào thi.</p>
+    </div>
+</div>
 
 {% if quizzes %}
-  <table class="table table-bordered mt-3">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Tên Quiz</th>
-        <th>Mô tả</th>
-        <th>Thời gian (phút)</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for quiz in quizzes %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ quiz.title }}</td>
-        <td>{{ quiz.description or "-" }}</td>
-        <td>{{ quiz.time_limit or "Không giới hạn" }}</td>
-        <td>
-          <a href="{{ url_for('quiz.start_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-success">
-            Bắt đầu
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="row g-3">
+    {% for quiz in quizzes %}
+    <div class="col-md-6">
+        <div class="quiz-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">{{ quiz.title }}</h5>
+                <span class="badge-mode {% if quiz.mode == 'exam' %}badge-exam{% else %}badge-practice{% endif %}">
+                    {{ "Exam" if quiz.mode == "exam" else "Practice" }}
+                </span>
+            </div>
+            <p class="page-subtitle mb-2">
+                {{ quiz.description or "Không có mô tả" }}
+            </p>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">
+                    Thời gian: {{ quiz.time_limit or "Không giới hạn" }} phút
+                </small>
+                <small class="text-muted">
+                    ID: {{ quiz.id }}
+                </small>
+            </div>
+            <div class="d-flex justify-content-end">
+                <a href="{{ url_for('quiz.start_quiz', quiz_id=quiz.id) }}" class="btn btn-primary-soft btn-sm">
+                    Vào thi →
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% else %}
-  <p>Không có quiz nào.</p>
+    <p class="page-subtitle">Hiện chưa có quiz nào.</p>
 {% endif %}
 {% endblock %}

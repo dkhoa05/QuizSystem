@@ -1,14 +1,38 @@
 {% extends "base.html" %}
-{% block title %}Kết quả{% endblock %}
+
+{% block title %}Kết quả Quiz{% endblock %}
 
 {% block content %}
-<h3>Kết quả bài làm</h3>
+<div class="card-soft p-4 p-md-5 mb-3 text-center">
+    <h2 class="page-title mb-2">Kết quả bài làm</h2>
+    <p class="page-subtitle mb-3">
+        Quiz: {{ submission.quiz.title }}
+    </p>
 
-<p>
-  Điểm: <strong>{{ "%.2f"|format(submission.score) }}</strong> / 10  
-  ({{ submission.correct_answers }} / {{ submission.total_questions }} câu đúng)
-</p>
+    <div class="score-circle" style="--score: {{ (submission.score | default(0)) * 10 // 1 }}">
+        <div class="score-inner">
+            {{ "%.1f"|format(submission.score or 0) }}
+        </div>
+    </div>
 
-<a href="{{ url_for('quiz.quiz_list') }}" class="btn btn-outline-primary btn-sm">Quay lại danh sách quiz</a>
-<a href="{{ url_for('quiz.history') }}" class="btn btn-outline-secondary btn-sm">Xem lịch sử</a>
+    <div class="row justify-content-center mb-3">
+        <div class="col-6 col-md-3">
+            <div class="page-subtitle mb-0">Tổng câu</div>
+            <div class="fw-semibold">{{ submission.total_questions }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="page-subtitle mb-0">Trả lời đúng</div>
+            <div class="fw-semibold text-success">{{ submission.correct_answers }}</div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+        <a href="{{ url_for('quiz.quiz_list') }}" class="btn btn-primary-soft">
+            🔁 Làm quiz khác
+        </a>
+        <a href="{{ url_for('quiz.history') }}" class="btn btn-outline-soft">
+            📜 Xem lịch sử
+        </a>
+    </div>
+</div>
 {% endblock %}

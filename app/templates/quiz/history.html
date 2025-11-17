@@ -1,39 +1,46 @@
 {% extends "base.html" %}
-{% block title %}Lịch sử bài làm{% endblock %}
+
+{% block title %}Lịch sử làm bài | Quiz System{% endblock %}
 
 {% block content %}
-<h3>Lịch sử bài làm</h3>
+<h2 class="page-title mb-2">Lịch sử làm bài</h2>
+<p class="page-subtitle mb-3">
+    Các bài quiz bạn đã hoàn thành.
+</p>
 
 {% if submissions %}
-  <table class="table table-striped mt-3">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Quiz</th>
-        <th>Điểm</th>
-        <th>Đúng / Tổng</th>
-        <th>Thời gian</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for s in submissions %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ s.quiz.title }}</td>
-        <td>{{ "%.2f"|format(s.score) }}</td>
-        <td>{{ s.correct_answers }}/{{ s.total_questions }}</td>
-        <td>{{ s.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
-        <td>
-          <a href="{{ url_for('quiz.view_result', submission_id=s.id) }}" class="btn btn-sm btn-outline-primary">
-            Xem
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="table-responsive">
+    <table class="table table-dark table-dark-soft align-middle">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Quiz</th>
+            <th>Điểm</th>
+            <th>Đúng / Tổng</th>
+            <th>Ngày làm</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sub in submissions %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ sub.quiz.title }}</td>
+            <td>{{ "%.1f"|format(sub.score or 0) }}</td>
+            <td>{{ sub.correct_answers }}/{{ sub.total_questions }}</td>
+            <td>{{ sub.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+            <td class="text-end">
+                <a href="{{ url_for('quiz.view_result', submission_id=sub.id) }}"
+                   class="btn btn-outline-soft btn-sm">
+                    Xem
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% else %}
-  <p>Chưa có bài làm nào.</p>
+    <p class="page-subtitle">Bạn chưa làm bài quiz nào.</p>
 {% endif %}
 {% endblock %}
