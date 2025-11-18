@@ -1,0 +1,22 @@
+venv/
+.venv/
+instance/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# certificates
+instance/certificates/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# migration cache
+migrations/versions/*.pyc
+migrations/versions/*__pycache__*/
