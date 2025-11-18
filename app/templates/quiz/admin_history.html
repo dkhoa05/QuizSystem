@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Lịch sử làm bài - Admin{% endblock %}
+{% block content %}
+
+<h1 class="page-title">📘 Lịch sử làm bài của toàn bộ người dùng</h1>
+
+{% if submissions %}
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Quiz</th>
+            <th>Điểm</th>
+            <th>Tổng câu</th>
+            <th>Đúng</th>
+            <th>Thời gian</th>
+            <th>Ngày làm</th>
+            <th>Chi tiết</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sub, user, quiz in submissions %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ quiz.title }}</td>
+            <td>{{ sub.score }}</td>
+            <td>{{ sub.total_questions }}</td>
+            <td>{{ sub.correct_answers }}</td>
+            <td>{{ sub.time_spent }}s</td>
+            <td>{{ sub.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+            <td><a href="{{ url_for('quiz.view_result', submission_id=sub.id) }}">Xem</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Không có ai làm bài.</p>
+{% endif %}
+
+{% endblock %}

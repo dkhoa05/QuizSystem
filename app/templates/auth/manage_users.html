@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card-soft p-4">
+    <h2 class="mb-3">👥 Quản lý người dùng</h2>
+    <a href="{{ url_for('auth.create_user') }}" class="btn btn-primary-soft mb-3">
+        + Thêm người dùng
+    </a>
+
+    <table class="table table-dark-soft table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tài khoản</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                    <a href="{{ url_for('auth.edit_user', user_id=user.id) }}" class="text-info">Sửa</a> |
+                    <form action="{{ url_for('auth.delete_user', user_id=user.id) }}" method="POST" style="display:inline">
+                        <button class="btn btn-link text-danger p-0" onclick="return confirm('Xóa người dùng?')">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

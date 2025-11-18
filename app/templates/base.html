@@ -151,6 +151,8 @@
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('quiz.history') }}">Lịch sử</a></li>
                         {% if current_user.role == 'admin' %}
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('quiz.manage_quizzes') }}">Quản lý</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.manage_users') }}">Quản lý người dùng</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('quiz.admin_history') }}">Lịch sử hệ thống</a></li>
                         {% endif %}
                     {% endif %}
                 </ul>

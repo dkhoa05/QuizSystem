@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card-soft p-4" style="max-width:600px;margin:auto;">
+    <h2 class="mb-3">✏ Sửa người dùng</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tên tài khoản</label>
+            <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu (để trống nếu không đổi)</label>
+            <input type="password" name="password" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Quyền</label>
+            <select name="role" class="form-select">
+                <option value="student" {% if user.role=='student' %}selected{% endif %}>student</option>
+                <option value="admin" {% if user.role=='admin' %}selected{% endif %}>admin</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary-soft">Lưu</button>
+        <a href="{{ url_for('auth.manage_users') }}" class="btn btn-outline-soft">Hủy</a>
+    </form>
+</div>
+{% endblock %}

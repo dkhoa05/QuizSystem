@@ -381,4 +381,15 @@ def edit_question(question_id):
         question=q,
         choices=choices,
     )
+@quiz_bp.route("/admin/history")
+@admin_required
+def admin_history():
+    submissions = (
+        db.session.query(Submission, User, Quiz)
+        .join(User, Submission.user_id == User.id)
+        .join(Quiz, Submission.quiz_id == Quiz.id)
+        .order_by(Submission.created_at.desc())
+        .all()
+    )
+    return render_template("quiz/admin_history.html", submissions=submissions)
 
