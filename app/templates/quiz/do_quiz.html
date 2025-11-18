@@ -1,68 +1,104 @@
 {% extends "base.html" %}
-
 {% block title %}Làm Quiz | {{ quiz.title }}{% endblock %}
 
 {% block content %}
-<div class="card-soft p-3 p-md-4 mb-3">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-        <div>
-            <h3 class="page-title mb-1">{{ quiz.title }}</h3>
-            <p class="page-subtitle mb-0">
-                {{ quiz.description or "Cố gắng đừng đoán mò quá nhiều." }}
-            </p>
-        </div>
-        <div class="text-md-end">
-            <div class="small text-muted">
-                Thời gian: {{ quiz.time_limit or "Không giới hạn" }} phút
-            </div>
-            <div class="small text-muted">
-                Số câu: {{ questions|length }}
-            </div>
-        </div>
+<div class="page-header d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="page-title mb-1">{{ quiz.title }}</h2>
+        <p class="page-subtitle mb-0">
+            {{ quiz.description or 'Không có mô tả' }}
+        </p>
     </div>
+    {% if countdown_seconds %}
+    <div class="text-end">
+        <p class="mb-1 page-subtitle">Thời gian còn lại</p>
+        <div id="countdown" class="badge bg-danger fs-6"></div>
+    </div>
+    {% endif %}
 </div>
 
 <form method="post">
+    <input type="hidden" name="time_spent" id="time_spent" value="0" />
+
     {% for q in questions %}
-    <div class="quiz-card p-3 mb-3">
+    <div class="card-soft p-3 mb-3">
         <div class="d-flex justify-content-between align-items-center mb-1">
-            <span class="text-info fw-semibold">Câu {{ loop.index }}</span>
-            <span class="small text-muted text-uppercase">
-                {% if q.type == "mcq" %}Multiple Choice{% elif q.type == "true_false" %}True / False{% else %}Essay{% endif %}
-            </span>
+            <div>
+                <span class="badge bg-secondary me-2">Câu {{ loop.index }}</span>
+                {% if q.difficulty %}
+                <span class="badge bg-info">{{ q.difficulty|capitalize }}</span>
+                {% endif %}
+            </div>
+            {% if q.time_limit %}
+            <small class="text-muted">Giới hạn: {{ q.time_limit }} giây</small>
+            {% endif %}
         </div>
         <p class="mb-2">{{ q.content }}</p>
 
-        {% if q.type == "mcq" or q.type == "true_false" %}
-            {% for c in q.choices %}
+        {% if q.type in ('mcq', 'true_false') %}
+            {% for choice in q.choices %}
             <label class="answer-option">
                 <input
-                    class="form-check-input"
                     type="radio"
                     name="q_{{ q.id }}"
-                    value="{{ c.id }}"
-                    style="margin-top: 0;"
+                    value="{{ choice.id }}"
+                    class="form-check-input me-2"
                 />
-                <span>{{ c.content }}</span>
+                <span>{{ choice.content }}</span>
             </label>
             {% endfor %}
-        {% elif q.type == "essay" %}
-            <textarea class="form-control" name="q_{{ q.id }}" rows="4"
-                      placeholder="Nhập câu trả lời của bạn tại đây..."></textarea>
-        {% endif %}
-
-        {% if q.explanation %}
-        <small class="text-muted d-block mt-1">
-            * Câu hỏi có giải thích sau khi nộp bài.
-        </small>
+        {% elif q.type == 'fill_in' %}
+            <input
+                type="text"
+                class="form-control"
+                name="q_{{ q.id }}"
+                placeholder="Nhập đáp án của bạn"
+            />
+        {% else %}
+            <textarea
+                class="form-control"
+                name="q_{{ q.id }}"
+                rows="3"
+                placeholder="Nhập câu trả lời (tự luận)"
+            ></textarea>
         {% endif %}
     </div>
     {% endfor %}
 
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end mt-3">
         <button type="submit" class="btn btn-primary-soft px-4">
-            ✅ Nộp bài
+            Nộp bài
         </button>
     </div>
 </form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let timeSpent = 0;
+    setInterval(() => {
+        timeSpent += 1;
+        document.getElementById("time_spent").value = timeSpent;
+    }, 1000);
+
+    {% if countdown_seconds %}
+    let remaining = {{ countdown_seconds }};
+    const countdownEl = document.getElementById("countdown");
+
+    function updateCountdown() {
+        if (!countdownEl) return;
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        countdownEl.textContent = m.toString().padStart(2, "0") + ":" + s.toString().padStart(2, "0");
+
+        if (remaining <= 0) {
+            document.querySelector("form").submit();
+        } else {
+            remaining -= 1;
+            setTimeout(updateCountdown, 1000);
+        }
+    }
+    updateCountdown();
+    {% endif %}
+</script>
 {% endblock %}

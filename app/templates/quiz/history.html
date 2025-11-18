@@ -3,44 +3,93 @@
 {% block title %}Lịch sử làm bài | Quiz System{% endblock %}
 
 {% block content %}
-<h2 class="page-title mb-2">Lịch sử làm bài</h2>
-<p class="page-subtitle mb-3">
-    Các bài quiz bạn đã hoàn thành.
-</p>
+<div class="page-header mb-3 d-flex justify-content-between align-items-center">
+  <div>
+    <h2 class="page-title mb-1">Lịch sử làm bài</h2>
+    <p class="page-subtitle mb-0">Theo dõi tiến bộ của ông.</p>
+  </div>
+</div>
 
 {% if submissions %}
-<div class="table-responsive">
-    <table class="table table-dark table-dark-soft align-middle">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Quiz</th>
-            <th>Điểm</th>
-            <th>Đúng / Tổng</th>
-            <th>Ngày làm</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for sub in submissions %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ sub.quiz.title }}</td>
-            <td>{{ "%.1f"|format(sub.score or 0) }}</td>
-            <td>{{ sub.correct_answers }}/{{ sub.total_questions }}</td>
-            <td>{{ sub.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
-            <td class="text-end">
-                <a href="{{ url_for('quiz.view_result', submission_id=sub.id) }}"
-                   class="btn btn-outline-soft btn-sm">
-                    Xem
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="card-soft p-3 mb-4">
+  <canvas id="scoreChart" height="120"></canvas>
 </div>
+
+<table class="table table-hover soft-table">
+  <thead>
+    <tr>
+      <th>Quiz</th>
+      <th>Điểm</th>
+      <th>Đúng/Số câu</th>
+      <th>Thời gian (giây)</th>
+      <th>Ngày</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sub in submissions %}
+    <tr>
+      <td>{{ sub.quiz.title }}</td>
+      <td>{{ "%.2f"|format(sub.score) }}/10</td>
+      <td>{{ sub.correct_answers }}/{{ sub.total_questions }}</td>
+      <td>{{ sub.time_spent }}</td>
+      <td>{{ sub.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>
+        <a href="{{ url_for('quiz.view_result', submission_id=sub.id) }}" class="btn btn-outline-soft btn-sm">
+          Kết quả
+        </a>
+        {% if sub.quiz.show_explanation %}
+        <a href="{{ url_for('quiz.review_submission', submission_id=sub.id) }}" class="btn btn-primary-soft btn-sm">
+          Review
+        </a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% else %}
-    <p class="page-subtitle">Bạn chưa làm bài quiz nào.</p>
+<p class="page-subtitle">Ông chưa làm bài nào.</p>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% if submissions %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = [
+    {% for sub in submissions|reverse %}
+      "{{ sub.created_at.strftime('%d/%m %H:%M') }}",
+    {% endfor %}
+  ];
+  const scores = [
+    {% for sub in submissions|reverse %}
+      {{ "%.2f"|format(sub.score) }},
+    {% endfor %}
+  ];
+
+  const ctx = document.getElementById("scoreChart").getContext("2d");
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Điểm theo thời gian",
+        data: scores,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          min: 0,
+          max: 10
+        }
+      }
+    }
+  });
+</script>
 {% endif %}
 {% endblock %}

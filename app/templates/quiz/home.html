@@ -48,25 +48,36 @@
     <div class="row g-3">
         {% for quiz in quizzes %}
         <div class="col-md-6">
-            <a href="{{ url_for('quiz.start_quiz', quiz_id=quiz.id) }}" class="text-decoration-none text-white">
-                <div class="quiz-card p-3 h-100">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0">{{ quiz.title }}</h5>
-                        <span class="badge-mode {% if quiz.mode == 'exam' %}badge-exam{% else %}badge-practice{% endif %}">
-                            {{ "Exam" if quiz.mode == "exam" else "Practice" }}
-                        </span>
-                    </div>
-                    <p class="page-subtitle mb-2">
-                        {{ quiz.description or "Không có mô tả" }}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            Thời gian: {{ quiz.time_limit or "Không giới hạn" }} phút
-                        </small>
-                        <span class="text-info small">Bắt đầu ngay →</span>
-                    </div>
+            <div class="quiz-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">{{ quiz.title }}</h5>
+                    <span class="badge-mode {% if quiz.mode == 'exam' %}badge-exam{% else %}badge-practice{% endif %}">
+                        {{ "Exam" if quiz.mode == "exam" else "Practice" }}
+                    </span>
                 </div>
-            </a>
+
+                <p class="page-subtitle mb-2">
+                    {{ quiz.description or "Không có mô tả" }}
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-muted">
+                        Thời gian: {{ quiz.time_limit or "Không giới hạn" }} phút
+                    </small>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('quiz.start_quiz', quiz_id=quiz.id) }}"
+                       class="btn btn-primary-soft btn-sm">
+                        ▶️ Bắt đầu
+                    </a>
+
+                    <a href="{{ url_for('quiz.leaderboard', quiz_id=quiz.id) }}"
+                       class="btn btn-outline-soft btn-sm">
+                        🏆 Leaderboard
+                    </a>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>

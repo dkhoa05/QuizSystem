@@ -1,95 +1,102 @@
 {% extends "base.html" %}
-
-{% block title %}Câu hỏi | {{ quiz.title }}{% endblock %}
+{% block title %}Quản lý câu hỏi{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <div>
-        <h2 class="page-title mb-1">Câu hỏi: {{ quiz.title }}</h2>
-        <p class="page-subtitle mb-0">Thêm và quản lý câu hỏi cho quiz này.</p>
+<h2 class="mb-4">Quản lý câu hỏi – {{ quiz.title }}</h2>
+
+<form method="POST" class="card p-4 mb-4">
+
+    <div class="mb-3">
+        <label class="form-label">Nội dung câu hỏi</label>
+        <textarea name="content" class="form-control" rows="3" required></textarea>
     </div>
-    <a href="{{ url_for('quiz.manage_quizzes') }}" class="btn btn-outline-soft btn-sm">
-        ← Quay lại danh sách quiz
-    </a>
-</div>
 
-<div class="card-soft p-3 p-md-4 mb-4">
-    <h5 class="mb-3">Thêm câu hỏi mới</h5>
-    <form method="post">
-        <div class="mb-3">
-            <label class="form-label">Nội dung câu hỏi</label>
-            <textarea class="form-control" name="content" rows="3" required></textarea>
-        </div>
+    <div class="mb-3">
+        <label class="form-label">Loại câu hỏi</label>
+        <select name="type" class="form-select" required>
+            <option value="mcq">Trắc nghiệm</option>
+            <option value="true_false">Đúng/Sai</option>
+            <option value="essay">Tự luận</option>
+        </select>
+    </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Loại câu hỏi</label>
-                <select name="type" class="form-select">
-                    <option value="mcq">Multiple Choice</option>
-                    <option value="true_false">True / False</option>
-                    <option value="essay">Essay</option>
-                </select>
+    <div class="mb-3">
+        <label class="form-label">Giải thích (optional)</label>
+        <textarea name="explanation" class="form-control" rows="2"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Độ khó</label>
+        <select name="difficulty" class="form-select">
+            <option value="">--Chọn--</option>
+            <option value="easy">Dễ</option>
+            <option value="medium">Trung bình</option>
+            <option value="hard">Khó</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Thời gian cho câu (giây)</label>
+        <input type="number" name="time_limit" class="form-control">
+    </div>
+
+    <hr class="my-3">
+
+    <h5>Đáp án (chỉ dùng cho trắc nghiệm):</h5>
+
+    {% for i in range(1, 5) %}
+    <div class="mb-3">
+        <label class="form-label">Lựa chọn {{ i }}</label>
+        <div class="input-group">
+            <input type="text" name="choice_{{ i }}" class="form-control">
+            <div class="input-group-text">
+                <input type="radio" name="correct_choice" value="{{ i }}">
             </div>
-            <div class="col-md-8 mb-3">
-                <label class="form-label">Giải thích (tuỳ chọn)</label>
-                <input type="text" class="form-control" name="explanation"
-                       placeholder="Giải thích đáp án (hiển thị sau khi nộp bài)" />
-            </div>
         </div>
+    </div>
+    {% endfor %}
 
-        <div class="mb-2">
-            <label class="form-label">Đáp án lựa chọn (MCQ / True-False)</label>
-        </div>
+    <button type="submit" class="btn btn-primary-soft">Thêm câu hỏi</button>
+</form>
 
-        {% for i in range(1, 5) %}
-        <div class="mb-2 d-flex align-items-center gap-2">
-            <div style="width: 60px;">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="correct_choice" value="{{ i }}" />
-                    <label class="form-check-label small">
-                        Đúng
-                    </label>
-                </div>
-            </div>
-            <input type="text" class="form-control" name="choice_{{ i }}" placeholder="Lựa chọn {{ i }}" />
-        </div>
-        {% endfor %}
+<hr>
 
-        <div class="d-flex justify-content-end mt-3">
-            <button type="submit" class="btn btn-primary-soft">
-                ➕ Thêm câu hỏi
-            </button>
-        </div>
-    </form>
-</div>
-
-<h5 class="mb-2">Danh sách câu hỏi</h5>
-{% if questions %}
-<div class="table-responsive">
-    <table class="table table-dark table-dark-soft align-middle">
-        <thead>
+<h4>Danh sách câu hỏi</h4>
+<table class="table table-dark-soft table-bordered mt-3">
+    <thead>
         <tr>
-            <th>#</th>
+            <th>ID</th>
             <th>Nội dung</th>
             <th>Loại</th>
-            <th>Số lựa chọn</th>
+            <th>Độ khó</th>
+            <th></th>
         </tr>
-        </thead>
-        <tbody>
+    </thead>
+    <tbody>
         {% for q in questions %}
         <tr>
-            <td>{{ loop.index }}</td>
-            <td style="max-width: 420px;">
-                <div class="small">{{ q.content }}</div>
-            </td>
+            <td>{{ q.id }}</td>
+            <td style="max-width: 300px">{{ q.content }}</td>
             <td>{{ q.type }}</td>
-            <td>{{ q.choices|length }}</td>
+            <td>{{ q.difficulty or '-' }}</td>
+            <td>
+              <a href="{{ url_for('quiz.edit_question', question_id=q.id) }}"
+                  class="btn btn-outline-soft btn-sm">
+                    Sửa</a>
+
+                  <form method="POST"
+                  action="{{ url_for('quiz.delete_question', question_id=q.id) }}"
+                  style="display:inline;"
+                  onsubmit="return confirm('Xóa câu hỏi này?');">
+
+                  <button class="btn btn-outline-soft btn-sm text-danger">
+                    Xóa
+                  </button>
+              </form>
+            </td>
         </tr>
         {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% else %}
-    <p class="page-subtitle">Chưa có câu hỏi nào cho quiz này.</p>
-{% endif %}
+    </tbody>
+</table>
+
 {% endblock %}

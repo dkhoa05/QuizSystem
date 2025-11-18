@@ -1,46 +1,60 @@
 {% extends "base.html" %}
 
-{% block title %}Tạo quiz mới | Admin{% endblock %}
+{% block title %}Tạo quiz mới{% endblock %}
 
 {% block content %}
-<div class="card-soft p-4 p-md-5">
-    <h2 class="page-title mb-2">Tạo quiz mới</h2>
-    <p class="page-subtitle mb-3">Điền thông tin quiz.</p>
+<h2 class="page-title mb-3">Tạo quiz mới</h2>
 
-    <form method="post">
-        <div class="mb-3">
-            <label class="form-label">Tiêu đề</label>
-            <input type="text" class="form-control" name="title" required />
-        </div>
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Tiêu đề</label>
+    <input type="text" class="form-control" name="title" required>
+  </div>
 
-        <div class="mb-3">
-            <label class="form-label">Mô tả</label>
-            <textarea class="form-control" name="description" rows="3"></textarea>
-        </div>
+  <div class="mb-3">
+    <label class="form-label">Mô tả</label>
+    <textarea class="form-control" name="description" rows="2"></textarea>
+  </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Thời gian (phút)</label>
-                <input type="number" class="form-control" name="time_limit" min="0" placeholder="Ví dụ: 15" />
-                <small class="text-muted">Để trống = không giới hạn</small>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Chế độ</label>
-                <select name="mode" class="form-select">
-                    <option value="exam">Exam</option>
-                    <option value="practice">Practice</option>
-                </select>
-            </div>
-        </div>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Thời gian (phút)</label>
+      <input type="number" class="form-control" name="time_limit" min="0">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Số câu random</label>
+      <input type="number" class="form-control" name="num_questions" min="0">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Pass score (0–10)</label>
+      <input type="number" class="form-control" name="pass_score" min="0" max="10" step="0.1" value="5">
+    </div>
+  </div>
 
-        <div class="d-flex justify-content-end gap-2">
-            <a href="{{ url_for('quiz.manage_quizzes') }}" class="btn btn-outline-soft">
-                Hủy
-            </a>
-            <button type="submit" class="btn btn-primary-soft">
-                Lưu
-            </button>
-        </div>
-    </form>
-</div>
+  <div class="mb-3">
+    <label class="form-label">Mode</label>
+    <select class="form-select" name="mode">
+      <option value="exam">Exam</option>
+      <option value="practice">Practice</option>
+    </select>
+  </div>
+
+  <div class="form-check mb-2">
+    <input class="form-check-input" type="checkbox" name="enable_certificate" id="enable_certificate">
+    <label class="form-check-label" for="enable_certificate">
+      Bật certificate cho quiz này
+    </label>
+  </div>
+
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="show_explanation" id="show_explanation" checked>
+    <label class="form-check-label" for="show_explanation">
+      Cho phép xem giải thích & review sau khi nộp
+    </label>
+  </div>
+
+  <button type="submit" class="btn btn-primary-soft">
+    Tạo quiz
+  </button>
+</form>
 {% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="page-title mb-3">Sửa câu hỏi</h2>
+
+<form method="POST">
+
+    <label class="form-label">Nội dung câu hỏi</label>
+    <textarea name="content" class="form-control mb-3">{{ question.content }}</textarea>
+
+    <label class="form-label">Loại</label>
+    <select name="type" class="form-select mb-3">
+        <option value="mcq" {% if question.type=='mcq' %}selected{% endif %}>MCQ</option>
+        <option value="true_false" {% if question.type=='true_false' %}selected{% endif %}>True/False</option>
+        <option value="essay" {% if question.type=='essay' %}selected{% endif %}>Essay</option>
+    </select>
+
+    <label class="form-label">Giải thích</label>
+    <textarea name="explanation" class="form-control mb-3">{{ question.explanation }}</textarea>
+
+    <label class="form-label">Độ khó</label>
+    <select name="difficulty" class="form-select mb-3">
+        <option value="">-- Chọn --</option>
+        <option value="easy" {% if question.difficulty=='easy' %}selected{% endif %}>Dễ</option>
+        <option value="medium" {% if question.difficulty=='medium' %}selected{% endif %}>Trung bình</option>
+        <option value="hard" {% if question.difficulty=='hard' %}selected{% endif %}>Khó</option>
+    </select>
+
+    <label class="form-label">Thời gian cho câu hỏi (giây)</label>
+    <input type="number" name="time_limit" class="form-control mb-4" value="{{ question.time_limit or '' }}">
+
+    {% if question.type != 'essay' %}
+    <h4 class="mt-3">Đáp án</h4>
+    {% for c in choices %}
+        <div class="mb-2">
+            <input type="radio" name="correct_choice" value="{{ loop.index }}"
+                   {% if c.is_correct %}checked{% endif %}>
+            <input type="text" class="form-control d-inline-block w-75"
+                   name="choice_{{ loop.index }}" value="{{ c.content }}">
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <button class="btn btn-primary-soft mt-3">Lưu thay đổi</button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Review bài làm | {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="page-header mb-3">
+  <h2 class="page-title mb-1">Review bài làm</h2>
+  <p class="page-subtitle mb-0">
+    Quiz: {{ quiz.title }} – Điểm: {{ submission.score|round(2) }}/10
+  </p>
+</div>
+
+{% for q in questions %}
+  {% set ans = answers_by_q.get(q.id) %}
+  <div class="question-card mb-3 p-3 quiz-card">
+    <p><strong>Câu {{ loop.index }}.</strong> {{ q.content|safe }}</p>
+
+    {% if q.type in ["mcq", "true_false"] %}
+      <ul class="mb-2">
+        {% for choice in q.choices %}
+          {% set is_user = ans and ans.user_answer == choice.id|string %}
+          {% set cls = "" %}
+          {% if choice.is_correct %}
+            {% set cls = "text-success fw-bold" %}
+          {% elif is_user and not choice.is_correct %}
+            {% set cls = "text-danger fw-bold" %}
+          {% endif %}
+          <li class="{{ cls }}">
+            {% if choice.is_correct %}✅{% endif %}
+            {% if is_user and not choice.is_correct %}❌{% endif %}
+            {{ choice.content }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="mb-1"><strong>Câu trả lời của bạn:</strong></p>
+      <p class="page-subtitle">{{ ans.user_answer if ans else "Chưa trả lời" }}</p>
+    {% endif %}
+
+    {% if q.explanation %}
+    <div class="mt-2">
+      <strong>Giải thích:</strong>
+      <p class="page-subtitle mb-0">{{ q.explanation|safe }}</p>
+    </div>
+    {% endif %}
+  </div>
+{% endfor %}
+{% endblock %}

@@ -8,11 +8,13 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap 5 -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% block extra_head %}{% endblock %}
 
     <style>
         :root {
@@ -23,46 +25,38 @@
             --accent: #fd79a8;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
-            font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: "Poppins", sans-serif;
             background: radial-gradient(circle at top left, #2d3436 0, #000 55%);
             color: #f5f6fa;
-            min-height: 100vh;
             margin: 0;
+            min-height: 100vh;
         }
 
         .navbar-custom {
-            background: rgba(11, 16, 32, 0.95);
+            background: rgba(11,16,32,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .navbar-brand {
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: .5px;
             background: var(--gradient-main);
             -webkit-background-clip: text;
             color: transparent;
         }
 
-        .nav-link {
-            color: #dfe6e9 !important;
-            font-weight: 500;
-        }
-
-        .nav-link.active {
-            color: #ffeaa7 !important;
-        }
+        .nav-link { color: #dfe6e9 !important; }
+        .nav-link.active { color: #ffeaa7 !important; }
 
         .pill-username {
             padding: 4px 10px;
             border-radius: 999px;
             background: rgba(255,255,255,0.08);
-            font-size: 0.85rem;
+            font-size: .85rem;
         }
 
         .main-wrapper {
@@ -71,19 +65,8 @@
             padding: 0 16px 40px;
         }
 
-        .page-header {
-            margin-bottom: 24px;
-        }
-
-        .page-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .page-subtitle {
-            font-size: 0.95rem;
-            color: #b2bec3;
-        }
+        .page-title { font-size: 1.8rem; font-weight: 700; }
+        .page-subtitle { color: #b2bec3; }
 
         .card-soft {
             border-radius: 18px;
@@ -96,13 +79,13 @@
             border-radius: 16px;
             background: linear-gradient(145deg, #141824, #090b12);
             border: 1px solid rgba(255,255,255,0.06);
-            transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out;
             cursor: pointer;
+            transition: all 0.12s ease-out;
         }
 
         .quiz-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(253, 121, 168, 0.9);
+            border-color: rgba(253,121,168,0.9);
             box-shadow: 0 16px 40px rgba(0,0,0,0.85);
         }
 
@@ -110,92 +93,17 @@
             border-radius: 999px;
             padding: 9px 18px;
             border: none;
-            font-weight: 500;
-            background-image: var(--gradient-main);
+            background: var(--gradient-main);
             color: #fff;
             box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-        }
-
-        .btn-primary-soft:hover {
-            opacity: 0.95;
-            color: #fff;
         }
 
         .btn-outline-soft {
             border-radius: 999px;
             padding: 9px 18px;
             border: 1px solid rgba(255,255,255,0.35);
-            background: transparent;
             color: #dfe6e9;
-        }
-
-        .btn-outline-soft:hover {
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-        }
-
-        .answer-option {
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(10,10,20,0.85);
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: transform 0.08s ease-out, border-color 0.08s ease-out, background 0.08s ease-out;
-        }
-
-        .answer-option:hover {
-            transform: translateY(-1px);
-            border-color: rgba(0, 184, 148, 0.7);
-            background: rgba(15, 18, 35, 0.95);
-        }
-
-        .answer-option input[type="radio"] {
-            accent-color: #00cec9;
-        }
-
-        .badge-mode {
-            border-radius: 999px;
-            padding: 3px 10px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-exam {
-            background: rgba(214, 48, 49, 0.25);
-            color: #ff7675;
-        }
-
-        .badge-practice {
-            background: rgba(9, 132, 227, 0.25);
-            color: #74b9ff;
-        }
-
-        .score-circle {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            background: conic-gradient(#00cec9 calc(var(--score) * 1%), #2d3436 0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            box-shadow: 0 18px 50px rgba(0,0,0,0.8);
-        }
-
-        .score-inner {
-            width: 92px;
-            height: 92px;
-            border-radius: 50%;
-            background: #0b1020;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            font-weight: 700;
+            background: transparent;
         }
 
         .flash-container {
@@ -213,65 +121,24 @@
             font-size: 0.9rem;
         }
 
-        .flash-success {
-            background: rgba(46, 204, 113, 0.12);
-            border: 1px solid rgba(46, 204, 113, 0.6);
-            color: #55efc4;
-        }
-
-        .flash-danger {
-            background: rgba(231, 76, 60, 0.12);
-            border: 1px solid rgba(231, 76, 60, 0.7);
-            color: #fab1a0;
-        }
-
-        .flash-info {
-            background: rgba(52, 152, 219, 0.12);
-            border: 1px solid rgba(52, 152, 219, 0.7);
-            color: #74b9ff;
-        }
-
-        .form-control,
-        .form-select {
-            background: rgba(5, 7, 14, 0.9);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.12);
-            color: #f5f6fa;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            background: rgba(5, 7, 14, 0.95);
-            border-color: #00cec9;
-            box-shadow: 0 0 0 0.15rem rgba(0, 206, 201, 0.25);
-            color: #fff;
-        }
-
-        .table-dark-soft {
-            --bs-table-bg: #0b1020;
-            --bs-table-border-color: rgba(255,255,255,0.08);
-        }
+        .flash-success { background: rgba(46,204,113,.12); border: 1px solid rgba(46,204,113,.6); color: #55efc4; }
+        .flash-danger { background: rgba(231,76,60,.12); border: 1px solid rgba(231,76,60,.7); color: #fab1a0; }
+        .flash-info { background: rgba(52,152,219,.12); border: 1px solid rgba(52,152,219,.7); color: #74b9ff; }
 
         @media (max-width: 768px) {
-            .main-wrapper {
-                margin-top: 24px;
-            }
-            .page-title {
-                font-size: 1.4rem;
-            }
+            .main-wrapper { margin-top: 24px; }
+            .page-title { font-size: 1.4rem; }
         }
     </style>
-
-    {% block extra_head %}{% endblock %}
 </head>
 
 <body>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container-fluid px-3 px-md-4">
-            <a class="navbar-brand" href="/quiz/">
-                Quiz System
-            </a>
+            <a class="navbar-brand" href="{{ url_for('quiz.home') }}">Quiz System</a>
+
             <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
@@ -279,81 +146,46 @@
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.path.startswith('/quiz') and request.path == '/quiz/' %}active{% endif %}"
-                               href="{{ url_for('quiz.home') }}">
-                                Trang chủ
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if '/quiz/list' in request.path %}active{% endif %}"
-                               href="{{ url_for('quiz.quiz_list') }}">
-                                Quiz
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if '/quiz/history' in request.path %}active{% endif %}"
-                               href="{{ url_for('quiz.history') }}">
-                                Lịch sử
-                            </a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('quiz.home') }}">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('quiz.quiz_list') }}">Quiz</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('quiz.history') }}">Lịch sử</a></li>
                         {% if current_user.role == 'admin' %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if '/quiz/admin' in request.path %}active{% endif %}"
-                               href="{{ url_for('quiz.manage_quizzes') }}">
-                                Quản lý
-                            </a>
-                        </li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('quiz.manage_quizzes') }}">Quản lý</a></li>
                         {% endif %}
                     {% endif %}
                 </ul>
 
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex gap-2">
                     {% if current_user.is_authenticated %}
-                        <span class="pill-username">
-                            👤 {{ current_user.username }}
-                            {% if current_user.role == "admin" %}
-                                <span class="text-warning ms-1">(Admin)</span>
-                            {% endif %}
-                        </span>
-                        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-soft btn-sm">
-                            Đăng xuất
-                        </a>
+                        <span class="pill-username">👤 {{ current_user.username }}{% if current_user.role == "admin" %}<span class="text-warning">(Admin)</span>{% endif %}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-soft btn-sm">Đăng xuất</a>
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-soft btn-sm">
-                            Đăng nhập
-                        </a>
-                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary-soft btn-sm">
-                            Đăng ký
-                        </a>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-soft btn-sm">Đăng nhập</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary-soft btn-sm">Đăng ký</a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Flash messages -->
+    <!-- Flash -->
     <div class="flash-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, msg in messages %}
-              <div class="flash-item
-                  {% if category == 'success' %}flash-success
-                  {% elif category == 'danger' %}flash-danger
-                  {% else %}flash-info{% endif %}">
-                  {{ msg }}
-              </div>
-            {% endfor %}
-          {% endif %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="flash-item flash-{{category}}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
     </div>
 
-    <!-- Main content -->
+    <!-- Page Content -->
     <div class="main-wrapper">
         {% block content %}{% endblock %}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
+
 </body>
 </html>
