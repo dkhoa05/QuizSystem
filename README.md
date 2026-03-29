@@ -1,3 +1,5 @@
+# Đồ án môn: Lập trình Python Nâng Cao
+---
 # 🎯 Quiz System – Hệ Thống Thi Trắc Nghiệm Online  
 Một hệ thống thi trắc nghiệm đầy đủ tính năng, hỗ trợ Admin quản lý ngân hàng câu hỏi, người dùng, bài thi và theo dõi thống kê. Sinh viên có thể làm bài, xem lịch sử và nhận chứng chỉ PDF tự động.
 
